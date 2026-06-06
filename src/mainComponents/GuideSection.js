@@ -12,9 +12,9 @@ const CARDS = [
     clickable: false,
   },
   {
-    icon: 'share',
-    title: '이메일 공유',
-    desc: '완성된 커리큘럼을 이메일로 바로 전송하거나 복사합니다.',
+    icon: 'picture_as_pdf',
+    title: 'PDF 다운로드',
+    desc: '완성된 커리큘럼을 PDF 파일로 저장하거나 복사합니다.',
     clickable: false,
   },
   {
