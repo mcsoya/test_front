@@ -3,7 +3,6 @@ import axios from 'axios';
 import NavBar from './NavBar';
 import InputPanel from './InputPanel';
 import DisplayPanel, { DISPLAY_STATES } from './DisplayPanel';
-import EmailModal from './EmailModal';
 import GuideSection from './GuideSection';
 import { mockGenerate, mockBuild, mockSendEmail, mockChat } from '../mocks/mockApi';
 import './MainPage.css';
@@ -14,10 +13,9 @@ const API_URL  = USE_MOCK ? '' : (process.env.REACT_APP_API_URL ?? 'http://local
 const CHAT_INIT = [{ role: 'ai', text: '안녕하세요! 커리큘럼에 대해 수정이 필요한 부분을 말씀해주세요.' }];
 
 const api = {
-  generate: (body) => USE_MOCK ? mockGenerate(body)  : axios.post(`${API_URL}/api/generate`, body),
-  build:    (body) => USE_MOCK ? mockBuild(body)     : axios.post(`${API_URL}/api/build`, body),
-  sendEmail:(body) => USE_MOCK ? mockSendEmail(body) : axios.post(`${API_URL}/api/send-email`, body),
-  chat:     (body) => USE_MOCK ? mockChat(body)      : axios.post(`${API_URL}/api/chat`, body),
+  generate: (body) => USE_MOCK ? mockGenerate(body) : axios.post(`${API_URL}/api/generate`, body),
+  build:    (body) => USE_MOCK ? mockBuild(body)    : axios.post(`${API_URL}/api/build`, body),
+  chat:     (body) => USE_MOCK ? mockChat(body)     : axios.post(`${API_URL}/api/chat`, body),
 };
 
 function MainPage() {
@@ -29,7 +27,6 @@ function MainPage() {
   const [answers, setAnswers]           = useState({});
   const [progress1, setProgress1]       = useState(0);
   const [progress2, setProgress2]       = useState(0);
-  const [emailModalOpen, setEmailModalOpen] = useState(false);
   const [curriculumMarkdown, setCurriculumMarkdown] = useState('');
   const [generateError, setGenerateError] = useState('');
   const [buildError, setBuildError] = useState('');
@@ -167,14 +164,6 @@ function MainPage() {
       <div className="mp-glow-sphere mp-glow-1" />
       <div className="mp-glow-sphere mp-glow-2" />
 
-      {/* Email Modal */}
-      <EmailModal
-        isOpen={emailModalOpen}
-        onClose={() => setEmailModalOpen(false)}
-        curriculumMarkdown={curriculumMarkdown}
-        onSendEmail={api.sendEmail}
-      />
-
       {/* Nav */}
       <NavBar />
 
@@ -210,7 +199,6 @@ function MainPage() {
               onConfirmQuestions={handleConfirmQuestions}
               onReset={handleReset}
               onCopy={handleCopy}
-              onOpenEmailModal={() => setEmailModalOpen(true)}
               chatOpen={chatOpen}
               onToggleChat={() => setChatOpen(prev => !prev)}
               chatMessages={chatMessages}

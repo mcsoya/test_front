@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import html2pdf from 'html2pdf.js';
 
 export const DISPLAY_STATES = {
   INITIAL:           'initial',
@@ -163,7 +164,17 @@ function StateQuestions({ questions, answers, onAnswerChange, onConfirm, buildEr
 }
 
 /* ── State: Result ── */
-function StateResult({ studyTarget, curriculumMarkdown, onReset, onCopy, onOpenEmailModal, chatOpen, onToggleChat }) {
+function StateResult({ studyTarget, curriculumMarkdown, onReset, onCopy, chatOpen, onToggleChat }) {
+  const handleDownloadPdf = () => {
+    const element = document.getElementById('mp-markdown-body');
+    html2pdf().set({
+      margin: 10,
+      filename: `${studyTarget}_커리큘럼.pdf`,
+      html2canvas: { scale: 2, useCORS: true },
+      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+    }).from(element).save();
+  };
+
   return (
     <div className="mp-state-result">
       <div className="mp-result-header">
@@ -175,8 +186,8 @@ function StateResult({ studyTarget, curriculumMarkdown, onReset, onCopy, onOpenE
           <button className="mp-icon-btn" onClick={onCopy} title="복사하기">
             <span className="material-symbols-outlined">content_copy</span>
           </button>
-          <button className="mp-icon-btn" onClick={onOpenEmailModal} title="이메일 전송">
-            <span className="material-symbols-outlined">mail</span>
+          <button className="mp-icon-btn" onClick={handleDownloadPdf} title="PDF 다운로드">
+            <span className="material-symbols-outlined">download</span>
           </button>
           <button
             className={`mp-icon-btn${chatOpen ? ' mp-icon-btn--active' : ''}`}
@@ -278,7 +289,6 @@ function DisplayPanel({
   onConfirmQuestions,
   onReset,
   onCopy,
-  onOpenEmailModal,
   chatOpen,
   onToggleChat,
   chatMessages,
@@ -323,7 +333,6 @@ function DisplayPanel({
             curriculumMarkdown={curriculumMarkdown}
             onReset={onReset}
             onCopy={onCopy}
-            onOpenEmailModal={onOpenEmailModal}
             chatOpen={chatOpen}
             onToggleChat={onToggleChat}
           />
