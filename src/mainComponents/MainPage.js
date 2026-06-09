@@ -99,6 +99,7 @@ function MainPage() {
       setProgress2(prog);
     }, 25);
 
+    console.log('[build] prevChatHistory:', prevChatHistory);
     try {
       const response = await api.build({ studyTarget, level, studyWeeks, ...answers, chatHistory: prevChatHistory });
       setCurriculumMarkdown(response.data.curriculum ?? response.data);
