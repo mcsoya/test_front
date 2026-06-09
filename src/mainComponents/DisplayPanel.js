@@ -165,6 +165,15 @@ function StateQuestions({ questions, answers, onAnswerChange, onConfirm, buildEr
   );
 }
 
+function normalizeMarkdown(md) {
+  return md
+    .replace(/\r\n/g, '\n')                    // CRLF → LF
+    .replace(/\r/g, '\n')                       // CR → LF
+    .replace(/([^\n])(#{1,6} )/g, '$1\n\n$2')  // inline heading → blank line before
+    .replace(/\n(#{1,6} )/g, '\n\n$1')          // single newline before heading → blank line
+    .replace(/\n{3,}/g, '\n\n');                 // collapse excess blank lines
+}
+
 /* ── State: Result ── */
 function StateResult({ studyTarget, curriculumMarkdown, onReset, onCopy, chatOpen, onToggleChat }) {
   const handleDownloadPdf = () => {
@@ -205,7 +214,7 @@ function StateResult({ studyTarget, curriculumMarkdown, onReset, onCopy, chatOpe
       <div className="mp-result-body">
         <div className="mp-markdown" id="mp-markdown-body">
           <ReactMarkdown remarkPlugins={[remarkGfm]}>
-            {curriculumMarkdown.replace(/([^\n])\n(#{1,6} )/g, '$1\n\n$2')}
+            {normalizeMarkdown(curriculumMarkdown)}
           </ReactMarkdown>
         </div>
       </div>
