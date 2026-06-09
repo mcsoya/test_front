@@ -34,6 +34,8 @@ function MainPage() {
   const [chatMessages, setChatMessages] = useState(CHAT_INIT);
   const [chatInput, setChatInput] = useState('');
   const [chatLoading, setChatLoading] = useState(false);
+  // 이전 세션 채팅 이력 — 리셋 후에도 남아 다음 빌드에 주입됨
+  const [prevChatHistory, setPrevChatHistory] = useState([]);
 
   /* Allow scrolling on this page (index.css disables it globally) */
   useEffect(() => {
@@ -98,7 +100,7 @@ function MainPage() {
     }, 25);
 
     try {
-      const response = await api.build({ studyTarget, level, studyWeeks, ...answers });
+      const response = await api.build({ studyTarget, level, studyWeeks, ...answers, chatHistory: prevChatHistory });
       setCurriculumMarkdown(response.data.curriculum ?? response.data);
       clearInterval(tick);
       setProgress2(100);
@@ -135,6 +137,12 @@ function MainPage() {
   };
 
   const handleReset = () => {
+    // 현재 세션의 사용자 채팅 요청을 다음 빌드를 위해 보존
+    const userMessages = chatMessages
+      .filter(m => m.role === 'user')
+      .map(m => m.text);
+    if (userMessages.length > 0) setPrevChatHistory(userMessages);
+
     setDisplayState(DISPLAY_STATES.INITIAL);
     setStudyTarget('');
     setQuestions([]);
