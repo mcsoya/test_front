@@ -116,10 +116,14 @@ function MainPage() {
     if (!chatInput.trim() || chatLoading) return;
     const userMsg = chatInput.trim();
     setChatInput('');
+    // 세션 내 선호 학습: 직전까지의 사용자 수정 요청을 누적 선호로 함께 전달
+    const editHistory = chatMessages
+      .filter(m => m.role === 'user')
+      .map(m => m.text);
     setChatMessages(prev => [...prev, { role: 'user', text: userMsg }]);
     setChatLoading(true);
     try {
-      const response = await api.chat({ message: userMsg, curriculum: curriculumMarkdown });
+      const response = await api.chat({ message: userMsg, curriculum: curriculumMarkdown, editHistory });
       setCurriculumMarkdown(response.data.curriculum);
       setChatMessages(prev => [...prev, { role: 'ai', text: response.data.reply }]);
     } catch (err) {
