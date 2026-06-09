@@ -132,7 +132,9 @@ function StateQuestions({ questions, answers, onAnswerChange, onConfirm, buildEr
                     className={`mp-pref-btn${answers[q.id] === opt.value ? ' selected' : ''}`}
                     onClick={() => onAnswerChange(q.id, opt.value)}
                   >
-                    <span className="material-symbols-outlined">{opt.icon}</span>
+                    <span className="material-symbols-outlined">
+                      {/^[a-z][a-z0-9_]*$/.test(opt.icon) ? opt.icon : 'help_outline'}
+                    </span>
                     <span className="mp-pref-label">{opt.label}</span>
                   </button>
                 ))}
