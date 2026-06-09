@@ -202,7 +202,9 @@ function StateResult({ studyTarget, curriculumMarkdown, onReset, onCopy, chatOpe
 
       <div className="mp-result-body">
         <div className="mp-markdown" id="mp-markdown-body">
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>{curriculumMarkdown}</ReactMarkdown>
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            {curriculumMarkdown.replace(/([^\n])\n(#{1,6} )/g, '$1\n\n$2')}
+          </ReactMarkdown>
         </div>
       </div>
     </div>
